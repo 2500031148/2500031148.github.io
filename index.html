@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Praveen Reddy | 3D Interactive Portfolio & CSE Hub</title>
+  <meta name="description" content="Portfolio of Praveen Reddy — B.Tech Computer Science Engineering student at KL University, Full-Stack Developer, and Creator of klmaterial. Explore interactive 3D scroll animations, projects, and skills.">
+  <meta name="keywords" content="Praveen Reddy, KL University, klmaterial, B.Tech CSE, Full Stack Developer, 3D Portfolio, Three.js, Python, React">
+  <meta name="author" content="Praveen Reddy">
+  <link rel="canonical" href="https://2500031148.github.io">
+
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://2500031148.github.io/">
+  <meta property="og:title" content="Praveen Reddy | 3D Interactive Portfolio">
+  <meta property="og:description" content="Explore the 3D scroll portfolio of Praveen Reddy — B.Tech CSE @ KL University & Full-Stack Developer.">
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/240481162?v=4">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://avatars.githubusercontent.com/u/240481162?v=4">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <!-- Scroll Progress Bar -->
+  <div id="scroll-progress-container">
+    <div id="scroll-progress-bar"></div>
+  </div>
+
+  <!-- Custom Cursor Elements (Desktop) -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-glow"></div>
+
+  <!-- Three.js WebGL 3D Background Canvas -->
+  <canvas id="webgl-canvas"></canvas>
+
+  <!-- 3D Controls HUD Overlay (Top Right Floating) -->
+  <div class="hud-controls" aria-label="3D Canvas Controls">
+    <button id="toggle-wireframe-btn" class="hud-btn" title="Toggle 3D Wireframe Mode" aria-label="Toggle Wireframe">
+      <span class="hud-icon">🌐</span>
+      <span class="hud-text">Wireframe</span>
+    </button>
+    <button id="toggle-speed-btn" class="hud-btn" title="Toggle Cosmic Warp Speed" aria-label="Toggle Speed">
+      <span class="hud-icon">⚡</span>
+      <span class="hud-text">Warp</span>
+    </button>
+    <button id="reset-cam-btn" class="hud-btn" title="Reset 3D Camera" aria-label="Reset Camera">
+      <span class="hud-icon">🔄</span>
+      <span class="hud-text">Reset 3D</span>
+    </button>
+  </div>
+
+  <!-- Navigation Bar (Apple Liquid Glass) -->
+  <nav class="navbar glass-navbar" id="main-nav">
+    <div class="nav-container">
+      <a href="#hero" class="brand-logo" aria-label="Home">
+        <span class="brand-badge-3d">PR</span>
+        <span class="brand-name">Praveen<span class="highlight">Reddy</span></span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#about" class="nav-link">About</a>
+        <a href="#skills" class="nav-link">Skills</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#stats" class="nav-link">Stats</a>
+        <a href="#roadmap" class="nav-link">Roadmap</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </div>
+
+      <div class="nav-actions">
+        <div class="status-indicator" title="Actively Seeking Opportunities">
+          <span class="pulse-dot"></span>
+          <span class="status-text">Open to Roles</span>
+        </div>
+        <a href="https://github.com/2500031148" target="_blank" rel="noopener noreferrer" class="btn btn-nav-gh" aria-label="GitHub Profile">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Wrap -->
+  <main class="page-content">
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="section hero-section">
+      <div class="hero-content">
+        <div class="hero-badge-pill glass-pill fade-in-up">
+          <span class="badge-spark">✨</span>
+          <span>B.Tech CSE Student & Full-Stack Developer</span>
+          <span class="badge-tag">KL University</span>
+        </div>
+
+        <h1 class="hero-title fade-in-up delay-1">
+          Building <span class="gradient-text text-3d-glow">Next-Gen</span> Digital Experiences
+        </h1>
+
+        <div class="typing-container fade-in-up delay-2">
+          <span class="typing-prefix">> </span>
+          <span id="typed-text" class="typed-text"></span>
+          <span class="typing-cursor">|</span>
+        </div>
+
+        <p class="hero-description fade-in-up delay-3">
+          I'm <strong>Praveen Reddy</strong>, a passionate Computer Science engineer focused on crafting high-performance web platforms, intuitive user interfaces, and robust software architectures.
+        </p>
+
+        <div class="hero-cta-group fade-in-up delay-4">
+          <a href="#projects" class="btn btn-primary btn-glow">
+            <span>Explore 3D Projects</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+          <a href="#about" class="btn btn-secondary glass-btn">
+            <span>About Me</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 9l-7 7-7-7"/>
+            </svg>
+          </a>
+          <a href="https://2500031148.github.io/klmaterial" target="_blank" rel="noopener noreferrer" class="btn btn-pill-accent">
+            <span>🎓 Launch klmaterial</span>
+          </a>
+        </div>
+
+        <!-- 3D Scroll Teaser Indicator -->
+        <div class="scroll-down-indicator fade-in-up delay-5">
+          <div class="mouse-icon">
+            <div class="wheel"></div>
+          </div>
+          <span class="scroll-hint">Scroll down to traverse 3D space</span>
+        </div>
+      </div>
+
+      <!-- Hero 3D Metrics Bar -->
+      <div class="hero-stats-bar glass-card-3d fade-in-up delay-4">
+        <div class="stat-item">
+          <div class="stat-number">10+</div>
+          <div class="stat-label">Repositories</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-number">100+</div>
+          <div class="stat-label">Learning Modules</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-number">CSE</div>
+          <div class="stat-label">KL University</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-number">3D / WebGL</div>
+          <div class="stat-label">Liquid Glass UI</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="section about-section">
+      <div class="section-header">
+        <div class="section-tag glass-pill">👨‍💻 Core Profile</div>
+        <h2 class="section-title">Architecting Software with <span class="gradient-text">Precision & Vision</span></h2>
+        <p class="section-subtitle">A glimpse into my background, academic journey, and engineering philosophy.</p>
+      </div>
+
+      <div class="about-grid">
+        <!-- 3D Holographic Profile Card -->
+        <div class="about-card glass-card-3d profile-hologram-card">
+          <div class="card-glare"></div>
+          <div class="hologram-avatar-wrap">
+            <div class="avatar-ring-3d"></div>
+            <img src="https://avatars.githubusercontent.com/u/240481162?v=4" alt="Praveen Reddy" class="hologram-avatar" />
+            <div class="hologram-scanline"></div>
+          </div>
+
+          <h3 class="profile-name">Praveen Reddy</h3>
+          <p class="profile-role">B.Tech Computer Science Engineering</p>
+          <p class="profile-org">📍 KL University • Andhra Pradesh, India</p>
+
+          <div class="profile-tags">
+            <span class="tag-pill">💻 Full Stack</span>
+            <span class="tag-pill">🐍 Python & DSA</span>
+            <span class="tag-pill">📊 Data Analytics</span>
+            <span class="tag-pill">🎨 Liquid Glass UI</span>
+          </div>
+
+          <div class="profile-quote">
+            <span class="quote-mark">“</span>
+            Write code that speaks. Build things that matter.
+            <span class="quote-mark">”</span>
+          </div>
+        </div>
+
+        <!-- Interactive Terminal Card -->
+        <div class="about-card glass-card-3d terminal-card">
+          <div class="card-glare"></div>
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="dot dot-red"></span>
+              <span class="dot dot-yellow"></span>
+              <span class="dot dot-green"></span>
+            </div>
+            <span class="terminal-title">praveen_reddy.json — zsh</span>
+          </div>
+          <div class="terminal-body">
+            <pre class="code-block"><code><span class="tok-keyword">const</span> <span class="tok-var">developer</span> = {
+  <span class="tok-prop">name</span>: <span class="tok-str">"Praveen Reddy"</span>,
+  <span class="tok-prop">education</span>: {
+    <span class="tok-prop">degree</span>: <span class="tok-str">"B.Tech in Computer Science Engineering"</span>,
+    <span class="tok-prop">institution</span>: <span class="tok-str">"KL University"</span>,
+    <span class="tok-prop">location</span>: <span class="tok-str">"Guntur, Andhra Pradesh, India"</span>
+  },
+  <span class="tok-prop">activeInitiatives</span>: [
+    <span class="tok-str">"klmaterial v3 (CSE Comprehensive Learning Hub)"</span>,
+    <span class="tok-str">"Interactive 3D WebGL Portfolio & Visualization"</span>,
+    <span class="tok-str">"Algorithmic Problem Solving (DSA & LeetCode)"</span>
+  ],
+  <span class="tok-prop">technicalFocus</span>: [
+    <span class="tok-str">"Full-Stack Web Development (HTML/CSS/JS/React)"</span>,
+    <span class="tok-str">"Python for Data Analysis & Automation"</span>,
+    <span class="tok-str">"Modern UI/UX with Apple Liquid Glass Aesthetics"</span>
+  ],
+  <span class="tok-prop">availability</span>: <span class="tok-str">"🟢 Open for Engineering Internships & Projects"</span>,
+  <span class="tok-prop">contact</span>: <span class="tok-str">"praveenreddy8942@gmail.com"</span>
+};</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- TECH STACK & 3D SKILLS SECTION -->
+    <section id="skills" class="section skills-section">
+      <div class="section-header">
+        <div class="section-tag glass-pill">🛠️ Engineering Arsenal</div>
+        <h2 class="section-title">Technologies & <span class="gradient-text">Competencies</span></h2>
+        <p class="section-subtitle">Interactive 3D matrix of languages, frameworks, databases, and development tooling.</p>
+      </div>
+
+      <!-- Skill Filter Controls -->
+      <div class="skill-filter-pills">
+        <button class="filter-pill active" data-filter="all">All Tech</button>
+        <button class="filter-pill" data-filter="languages">Languages</button>
+        <button class="filter-pill" data-filter="frontend">Frontend & Web</button>
+        <button class="filter-pill" data-filter="backend">Backend & DB</button>
+        <button class="filter-pill" data-filter="tools">DevOps & Tools</button>
+      </div>
+
+      <div class="skills-grid">
+        <!-- Languages -->
+        <div class="skill-category-card glass-card-3d" data-cat="languages">
+          <div class="card-glare"></div>
+          <div class="card-icon-wrap">🔤</div>
+          <h3 class="card-cat-title">Core Languages</h3>
+          <div class="skill-pills-list">
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python"/><span>Python</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="JavaScript"/><span>JavaScript (ES6+)</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" alt="TypeScript"/><span>TypeScript</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" alt="C++"/><span>C / C++</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="Java"/><span>Java</span></div>
+          </div>
+        </div>
+
+        <!-- Frontend -->
+        <div class="skill-category-card glass-card-3d" data-cat="frontend">
+          <div class="card-glare"></div>
+          <div class="card-icon-wrap">🎨</div>
+          <h3 class="card-cat-title">Frontend & Web</h3>
+          <div class="skill-pills-list">
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original.svg" alt="React"/><span>React.js</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original.svg" alt="HTML5"/><span>HTML5 & Semantic DOM</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original.svg" alt="CSS3"/><span>CSS3 / Vanilla CSS</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/threejs/threejs-original.svg" alt="Three.js"/><span>Three.js / WebGL</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/tailwindcss/tailwindcss-original.svg" alt="Tailwind"/><span>Tailwind CSS</span></div>
+          </div>
+        </div>
+
+        <!-- Backend & DB -->
+        <div class="skill-category-card glass-card-3d" data-cat="backend">
+          <div class="card-glare"></div>
+          <div class="card-icon-wrap">⚙️</div>
+          <h3 class="card-cat-title">Backend & Data</h3>
+          <div class="skill-pills-list">
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original.svg" alt="Node.js"/><span>Node.js</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original.svg" alt="Express"/><span>Express.js</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original.svg" alt="MySQL"/><span>MySQL / SQL</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original.svg" alt="MongoDB"/><span>MongoDB</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/pandas/pandas-original.svg" alt="Pandas"/><span>Pandas / Analytics</span></div>
+          </div>
+        </div>
+
+        <!-- Tools & DevOps -->
+        <div class="skill-category-card glass-card-3d" data-cat="tools">
+          <div class="card-glare"></div>
+          <div class="card-icon-wrap">🚀</div>
+          <h3 class="card-cat-title">DevOps & Tooling</h3>
+          <div class="skill-pills-list">
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/git/git-original.svg" alt="Git"/><span>Git & GitHub</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/vscode/vscode-original.svg" alt="VSCode"/><span>VS Code</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linux/linux-original.svg" alt="Linux"/><span>Linux / Bash</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/figma/figma-original.svg" alt="Figma"/><span>Figma & UI Prototyping</span></div>
+            <div class="skill-badge"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postman/postman-original.svg" alt="Postman"/><span>Postman / REST APIs</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- FEATURED PROJECTS SECTION -->
+    <section id="projects" class="section projects-section">
+      <div class="section-header">
+        <div class="section-tag glass-pill">🚀 Key Innovations</div>
+        <h2 class="section-title">Featured <span class="gradient-text">Engineering Projects</span></h2>
+        <p class="section-subtitle">Real-world applications engineered with modern web standards, sleek glass UI, and clean code.</p>
+      </div>
+
+      <div class="projects-grid">
+        <!-- Project 1: klmaterial -->
+        <div class="project-card glass-card-3d">
+          <div class="card-glare"></div>
+          <div class="project-header">
+            <div class="project-icon-badge">🎓</div>
+            <div class="project-meta">
+              <span class="project-type">FLAGSHIP INITIATIVE</span>
+              <h3 class="project-title">klmaterial</h3>
+            </div>
+            <span class="project-status live-status">Live</span>
+          </div>
+          <p class="project-desc">
+            A comprehensive, high-traffic Computer Science learning portal built for KL University students. Features 100+ organized subject modules, curated study guides, reference materials, and semester roadmaps with an Apple Liquid Glass aesthetic.
+          </p>
+          <div class="project-tech-stack">
+            <span class="tech-tag">HTML5</span>
+            <span class="tech-tag">Liquid Glass CSS</span>
+            <span class="tech-tag">Vanilla JS</span>
+            <span class="tech-tag">GitHub Pages</span>
+          </div>
+          <div class="project-links">
+            <a href="https://2500031148.github.io/klmaterial" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
+              <span>Visit Live Portal 🌐</span>
+            </a>
+            <a href="https://github.com/2500031148/klmaterial" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+              <span>View Source 💻</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Project 2: klmaterial-advanced -->
+        <div class="project-card glass-card-3d">
+          <div class="card-glare"></div>
+          <div class="project-header">
+            <div class="project-icon-badge">⚡</div>
+            <div class="project-meta">
+              <span class="project-type">NEXT-GEN WEB APP</span>
+              <h3 class="project-title">klmaterial-advanced</h3>
+            </div>
+            <span class="project-status live-status">Live</span>
+          </div>
+          <p class="project-desc">
+            The next-generation evolution of the KL Material hub. Features modern component architecture, dynamic interactive search filters, responsive modular cards, dark-mode visual polish, and performance optimizations.
+          </p>
+          <div class="project-tech-stack">
+            <span class="tech-tag">JavaScript ES6+</span>
+            <span class="tech-tag">CSS Grid & Flex</span>
+            <span class="tech-tag">Liquid Glass v3</span>
+            <span class="tech-tag">SEO Best Practices</span>
+          </div>
+          <div class="project-links">
+            <a href="https://2500031148.github.io/klmaterial-advanced" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
+              <span>Visit Live Portal 🌐</span>
+            </a>
+            <a href="https://github.com/2500031148/klmaterial-advanced" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+              <span>View Source 💻</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Project 3: College Event Management System -->
+        <div class="project-card glass-card-3d">
+          <div class="card-glare"></div>
+          <div class="project-header">
+            <div class="project-icon-badge">🎪</div>
+            <div class="project-meta">
+              <span class="project-type">CAMPUS APPLICATION</span>
+              <h3 class="project-title">College Event Management</h3>
+            </div>
+            <span class="project-status">Completed</span>
+          </div>
+          <p class="project-desc">
+            A centralized college event registration and management system. Enables organizers to publish campus symposiums, workshops, and sports meets, while students browse schedules and register seamlessly.
+          </p>
+          <div class="project-tech-stack">
+            <span class="tech-tag">Web Stack</span>
+            <span class="tech-tag">Event Handlers</span>
+            <span class="tech-tag">Interactive Forms</span>
+            <span class="tech-tag">Responsive Layout</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/2500031148/College-Event-Management-System-" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+              <span>View Source on GitHub 💻</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Project 4: Python Inventory Management -->
+        <div class="project-card glass-card-3d">
+          <div class="card-glare"></div>
+          <div class="project-header">
+            <div class="project-icon-badge">📦</div>
+            <div class="project-meta">
+              <span class="project-type">DATA ANALYTICS</span>
+              <h3 class="project-title">Python Inventory & Analytics</h3>
+            </div>
+            <span class="project-status">Completed</span>
+          </div>
+          <p class="project-desc">
+            An automated inventory tracking and data analysis suite built in Python. Features stock monitoring, order ledger analysis, and graphical reports using Pandas and Matplotlib for data-driven decisions.
+          </p>
+          <div class="project-tech-stack">
+            <span class="tech-tag">Python 3</span>
+            <span class="tech-tag">Pandas</span>
+            <span class="tech-tag">Matplotlib</span>
+            <span class="tech-tag">File I/O</span>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/2500031148/python-project" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+              <span>View Source on GitHub 💻</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- GITHUB LIVE STATS & 3D ISOMETRIC SECTION -->
+    <section id="stats" class="section stats-section">
+      <div class="section-header">
+        <div class="section-tag glass-pill">📊 Live Metrics</div>
+        <h2 class="section-title">GitHub Activity & <span class="gradient-text">Performance</span></h2>
+        <p class="section-subtitle">Real-time statistics directly synced with my open-source repository contributions.</p>
+      </div>
+
+      <div class="stats-cards-grid">
+        <!-- GitHub Stats Card -->
+        <div class="stats-card glass-card-3d">
+          <div class="card-glare"></div>
+          <h3 class="stat-card-title">GitHub Overview</h3>
+          <div class="embed-image-wrap">
+            <img src="https://github-readme-stats.vercel.app/api?username=2500031148&show_icons=true&theme=midnight-purple&hide_border=true&bg_color=060714&title_color=a78bfa&icon_color=7c3aed&text_color=e0d7ff&count_private=true&include_all_commits=true" alt="GitHub Stats" loading="lazy" />
+          </div>
+        </div>
+
+        <!-- Top Languages Card -->
+        <div class="stats-card glass-card-3d">
+          <div class="card-glare"></div>
+          <h3 class="stat-card-title">Top Languages</h3>
+          <div class="embed-image-wrap">
+            <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=2500031148&layout=compact&theme=midnight-purple&hide_border=true&bg_color=060714&title_color=a78bfa&text_color=e0d7ff&langs_count=8" alt="Top Languages" loading="lazy" />
+          </div>
+        </div>
+
+        <!-- Streak Stats -->
+        <div class="stats-card glass-card-3d full-width-stat">
+          <div class="card-glare"></div>
+          <h3 class="stat-card-title">Contribution Streak</h3>
+          <div class="embed-image-wrap">
+            <img src="https://github-readme-streak-stats.herokuapp.com?user=2500031148&theme=midnight-purple&hide_border=true&background=060714&stroke=6d28d9&ring=a78bfa&fire=c4b5fd&currStreakLabel=a78bfa&sideLabels=e0d7ff&dates=a78bfa&currStreakNum=e0d7ff&sideNums=e0d7ff" alt="GitHub Streak" loading="lazy" />
+          </div>
+        </div>
+
+        <!-- Trophy Shelf -->
+        <div class="stats-card glass-card-3d full-width-stat">
+          <div class="card-glare"></div>
+          <h3 class="stat-card-title">GitHub Profile Trophies</h3>
+          <div class="embed-image-wrap trophies-wrap">
+            <img src="https://github-profile-trophy.vercel.app/?username=2500031148&theme=darkhub&no-frame=true&no-bg=true&margin-w=8&column=7" alt="GitHub Trophies" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ROADMAP SECTION -->
+    <section id="roadmap" class="section roadmap-section">
+      <div class="section-header">
+        <div class="section-tag glass-pill">🎯 Future Trajectory</div>
+        <h2 class="section-title">2024–2025 <span class="gradient-text">Engineering Roadmap</span></h2>
+        <p class="section-subtitle">Key technical milestones, continuous learning goals, and career objectives.</p>
+      </div>
+
+      <div class="roadmap-timeline">
+        <div class="timeline-line"></div>
+
+        <div class="timeline-item completed">
+          <div class="timeline-node">✓</div>
+          <div class="timeline-content glass-card-3d">
+            <div class="card-glare"></div>
+            <span class="timeline-status-badge">Completed</span>
+            <h3 class="timeline-heading">Launch klmaterial v3 Learning Hub</h3>
+            <p class="timeline-desc">Engineered full portal with Apple Liquid Glass aesthetic, serving study modules & resources for KLU CSE students.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item completed">
+          <div class="timeline-node">✓</div>
+          <div class="timeline-content glass-card-3d">
+            <div class="card-glare"></div>
+            <span class="timeline-status-badge">Completed</span>
+            <h3 class="timeline-heading">College Event Management Application</h3>
+            <p class="timeline-desc">Architected responsive system for event registration, scheduling, and notifications.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item in-progress">
+          <div class="timeline-node">⚡</div>
+          <div class="timeline-content glass-card-3d">
+            <div class="card-glare"></div>
+            <span class="timeline-status-badge in-progress-badge">In Progress</span>
+            <h3 class="timeline-heading">3D Interactive WebGL & Three.js Portfolio</h3>
+            <p class="timeline-desc">Deploying GPU-accelerated 3D scroll experiences with particle physics and tactile glassmorphic UI.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item in-progress">
+          <div class="timeline-node">⚡</div>
+          <div class="timeline-content glass-card-3d">
+            <div class="card-glare"></div>
+            <span class="timeline-status-badge in-progress-badge">In Progress</span>
+            <h3 class="timeline-heading">Data Structures & Algorithms Mastery</h3>
+            <p class="timeline-desc">Solving advanced algorithmic problems in C++ and Python (Arrays, Trees, Graphs, Dynamic Programming).</p>
+          </div>
+        </div>
+
+        <div class="timeline-item upcoming">
+          <div class="timeline-node">⏳</div>
+          <div class="timeline-content glass-card-3d">
+            <div class="card-glare"></div>
+            <span class="timeline-status-badge upcoming-badge">Upcoming</span>
+            <h3 class="timeline-heading">Software Engineering Internship</h3>
+            <p class="timeline-desc">Contributing to high-scale production systems, microservices, and industry full-stack applications.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="section contact-section">
+      <div class="section-header">
+        <div class="section-tag glass-pill">📬 Get In Touch</div>
+        <h2 class="section-title">Let's Build Something <span class="gradient-text">Extraordinary</span></h2>
+        <p class="section-subtitle">Interested in collaborating, hiring, or discussing technology? Reach out anytime!</p>
+      </div>
+
+      <div class="contact-card glass-card-3d">
+        <div class="card-glare"></div>
+        <div class="contact-inner">
+          <div class="contact-methods">
+            <!-- Email -->
+            <div class="contact-item">
+              <div class="contact-icon">📧</div>
+              <div class="contact-info">
+                <span class="contact-label">Direct Email</span>
+                <span class="contact-value" id="email-text">praveenreddy8942@gmail.com</span>
+              </div>
+              <button class="btn btn-secondary btn-sm copy-btn" id="copy-email-btn" title="Copy Email">
+                <span>Copy</span>
+              </button>
+            </div>
+
+            <!-- LinkedIn -->
+            <a href="https://www.linkedin.com/in/praveen-reddy-37b0a6365" target="_blank" rel="noopener noreferrer" class="contact-item contact-link-item">
+              <div class="contact-icon">💼</div>
+              <div class="contact-info">
+                <span class="contact-label">LinkedIn</span>
+                <span class="contact-value">praveen-reddy-37b0a6365</span>
+              </div>
+              <span class="link-arrow">↗</span>
+            </a>
+
+            <!-- GitHub -->
+            <a href="https://github.com/2500031148" target="_blank" rel="noopener noreferrer" class="contact-item contact-link-item">
+              <div class="contact-icon">🐙</div>
+              <div class="contact-info">
+                <span class="contact-label">GitHub</span>
+                <span class="contact-value">@2500031148</span>
+              </div>
+              <span class="link-arrow">↗</span>
+            </a>
+
+            <!-- University -->
+            <div class="contact-item">
+              <div class="contact-icon">🎓</div>
+              <div class="contact-info">
+                <span class="contact-label">Institution</span>
+                <span class="contact-value">KL University, Andhra Pradesh, India</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="brand-badge-3d sm">PR</span>
+          <span class="footer-title">Praveen Reddy</span>
+        </div>
+        <p class="footer-quote">“Code is poetry. Make it beautiful.”</p>
+        <p class="footer-copy">© 2026 Praveen Reddy • Built with Three.js WebGL & Apple Liquid Glass Design System</p>
+        <div class="footer-links">
+          <a href="#hero">Back to Top ↑</a>
+          <a href="https://github.com/2500031148" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://2500031148.github.io/klmaterial" target="_blank" rel="noopener noreferrer">klmaterial</a>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
